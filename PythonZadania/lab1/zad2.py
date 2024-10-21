@@ -27,53 +27,70 @@ graph = {
     'I' : []
 }
 
-# moje rozwiązanie - dopracuj bo to tylko bfs zaimplementowany:
+# Moje zadanie dokończone w domu. Trochę się napisałem komentarzy, ponieważ miałem z tym zaskakująco duże trudności...
 
-def bfs(graph, node):
-    visited = [node]
-    queue = [node]
+def bfs_shortest_path(graph, start, end):
+    # Funkcja do rekurencji:
+    def bfs_recursive(queue, visited):
+        if not queue:
+            return None
+        else:
+            # Pobieramy pierwszą ścieżkę z kolejki
+            path = queue[0]
+            # Aktualizujemy kolejkę, usuwając pierwszą ścieżkę
+            queue_rest = queue[1:]
+            # Pobieramy ostatni węzeł z bieżącej ścieżki
+            node = path[-1]
+            if node == end:
+                return path # na końcu kończymy :)))
+            elif node in visited:
+                return bfs_recursive(queue_rest, visited) # odwiedzone pomijamy
+            else:
+                neighbors = graph.get(node, []) # zbieramy sąsiadów węzła
+                unvisited_neighbors = filter(lambda n: n not in visited, neighbors) # filtrujemy odwiedzonych
 
-    while queue:
-        s = queue.pop(0)
-        print(s, end = " ")
+                # Tworzymy nowe ścieżki, dodając do bieżącej ścieżki każdego nieodwiedzonego sąsiada
+                new_paths = list(map(lambda n: path + [n], unvisited_neighbors))
 
-        for n in graph[s]:
-            if n not in visited:
-                visited.append(n)
-                queue.append(n)
+                # Rekurencyjnie wywołujemy funkcję z aktualizowaną kolejką i zbiorem odwiedzonych węzłów
+                return bfs_recursive(queue_rest + new_paths, visited.union({node}))
 
-print(bfs(graph, 'A'))
+    # Inicjujemy BFS z kolejką zawierającą węzeł startowy i pustym zbiorem odwiedzonych węzłów
+    return bfs_recursive([[start]], set())
 
-# rozwiązanie z zajęć:
+path = bfs_shortest_path(graph, 'A', 'I')
+print(path)
 
-from collections import deque
+# rozwiązanie z zajęć - coś źle przepisałem, nie wywołuje się tak jak powinno:
 
-
-def bfsPath(graph, start, end):
-    queue = deque([start])
-
-    visited = set()
-
-    while queue:
-        path = queue.popleft()
-        node = path[-1]
-
-        if node == end:
-            return path
-        if node not in visited:
-            for neighbor in graph(node, []):
-                new_path = list(path)
-                new_path.append(neighbor)
-                queue.append(new_path)
-            visited.add(node)
-    return None
-
-
-graph = {'A': ['B', 'C', 'F'],
-         'B': ['A', 'C', 'D'],
-         'C': ['A', 'B', 'D', 'F', 'E'],
-         'D': ['B', 'C'],
-         'E': ['C'],
-         'F': ['A', 'C']}
-
-print(bfsPath(graph, 'A', 'B'))
+# from collections import deque
+#
+#
+# def bfsPath(graph, start, end):
+#     queue = deque([start])
+#
+#     visited = set()
+#
+#     while queue:
+#         path = queue.popleft()
+#         node = path[-1]
+#
+#         if node == end:
+#             return path
+#         if node not in visited:
+#             for neighbor in graph(node, []):
+#                 new_path = list(path)
+#                 new_path.append(neighbor)
+#                 queue.append(new_path)
+#             visited.add(node)
+#     return None
+#
+#
+# graph = {'A': ['B', 'C', 'F'],
+#          'B': ['A', 'C', 'D'],
+#          'C': ['A', 'B', 'D', 'F', 'E'],
+#          'D': ['B', 'C'],
+#          'E': ['C'],
+#          'F': ['A', 'C']}
+#
+# print(bfsPath(graph, 'A', 'E'))
