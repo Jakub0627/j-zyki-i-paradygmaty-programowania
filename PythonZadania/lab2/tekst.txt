@@ -1,0 +1,3 @@
+Programowanie funkcyjne – filozofia i metodyka programowania będąca odmianą programowania deklaratywnego, w której wykorzystuje się to, że funkcje należą do typów pierwszoklasowych. Kładzie się nacisk na obliczanie wartości funkcji (często rekurencyjnych), ich kompozycje oraz funkcje wyższego rzędu.
+
+W czystym programowaniu funkcyjnym, raz zdefiniowana funkcja zwraca zawsze tę samą wartość dla określonych wartości argumentów, tak jak funkcje matematyczne. Duży nacisk kładzie się także na niezmienność danych[1].
