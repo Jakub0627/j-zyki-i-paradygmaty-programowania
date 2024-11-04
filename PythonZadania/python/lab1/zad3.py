@@ -13,8 +13,6 @@ osiągnąć optymalne rozwiązanie.
 • Program powinien zwrócić optymalną kolejność zadań oraz całkowity czas oczekiwania.
 '''
 
-# Rozwiązanie proceduralne:
-
 print("\nRozwiązanie proceduralne:\n")
 
 tasks = [
@@ -24,18 +22,15 @@ tasks = [
     {'id': 4, 'time': 5, 'reward': 5},
 ]
 
-# Współczynnik ważności/priorytet
 for task in tasks:
     task['priority'] = task['time'] / task['reward']
 
-# Bubble sort dla tasków względem priority
 n = len(tasks)
 for i in range(n):
     for j in range(0, n - i - 1):
         if tasks[j]['priority'] > tasks[j + 1]['priority']:
             tasks[j], tasks[j + 1] = tasks[j + 1], tasks[j]
 
-# Zmienne do śledzenia czasu
 waiting_time = 0
 elapsed_time = 0
 for task in tasks:
@@ -46,9 +41,11 @@ for task in tasks:
     print(f"Task {task['id']} (Time: {task['time']}, Reward: {task['reward']})")
 print(f"Total Waiting Time: {waiting_time}")
 
-# Rozwiązanie funkcyjne: - popraw to jeszcze
+#######################################################################################################################
 
-print("\nRozwiązanie funkcyjne: (jeszcze nie skończone)\n")
+from functools import reduce
+
+print("\nRozwiązanie funkcyjne:\n")
 
 tasks = [
     {'id': 1, 'time': 3, 'reward': 4},
@@ -57,10 +54,19 @@ tasks = [
     {'id': 4, 'time': 5, 'reward': 5},
 ]
 
-# jeszcze nie opanowałem do końca lambdy, ale tutaj próbuję jak mogę...
 tasks_with_priority = list(map(lambda task: {**task, 'priority': task['time'] / task['reward']}, tasks))
+
 sorted_tasks = sorted(tasks_with_priority, key=lambda task: task['priority'])
 
-print(sorted_tasks)
+def accumulate_waiting_time(acc, task):
+    waiting_time, elapsed_time = acc
+    waiting_time += elapsed_time
+    elapsed_time += task['time']
+    return waiting_time, elapsed_time
 
-# Dokończę to później, nie mam siły po BFS
+total_waiting_time, _ = reduce(accumulate_waiting_time, sorted_tasks, (0, 0))
+
+for task in sorted_tasks:
+    print(f"Task {task['id']} (Time: {task['time']}, Reward: {task['reward']}, Priority: {task['priority']})")
+print(f"Total Waiting Time: {total_waiting_time}")
+

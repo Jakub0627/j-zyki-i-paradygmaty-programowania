@@ -30,7 +30,7 @@ graph = {
 # Moje zadanie dokończone w domu. Trochę się napisałem komentarzy, ponieważ miałem z tym zaskakująco duże trudności...
 
 def bfs_shortest_path(graph, start, end):
-    # Funkcja do rekurencji:
+
     def bfs_recursive(queue, visited):
         if not queue:
             return None
@@ -61,36 +61,38 @@ def bfs_shortest_path(graph, start, end):
 path = bfs_shortest_path(graph, 'A', 'I')
 print(path)
 
-# rozwiązanie z zajęć - coś źle przepisałem, nie wywołuje się tak jak powinno:
 
-# from collections import deque
-#
-#
-# def bfsPath(graph, start, end):
-#     queue = deque([start])
-#
-#     visited = set()
-#
-#     while queue:
-#         path = queue.popleft()
-#         node = path[-1]
-#
-#         if node == end:
-#             return path
-#         if node not in visited:
-#             for neighbor in graph(node, []):
-#                 new_path = list(path)
-#                 new_path.append(neighbor)
-#                 queue.append(new_path)
-#             visited.add(node)
-#     return None
-#
-#
-# graph = {'A': ['B', 'C', 'F'],
-#          'B': ['A', 'C', 'D'],
-#          'C': ['A', 'B', 'D', 'F', 'E'],
-#          'D': ['B', 'C'],
-#          'E': ['C'],
-#          'F': ['A', 'C']}
-#
-# print(bfsPath(graph, 'A', 'E'))
+from collections import deque
+
+def bfs_path(graph, start, end):
+    queue = deque([[start]])
+    visited = set()
+
+    while queue:
+        path = queue.popleft()
+        node = path[-1]
+
+        if node == end:
+            return path
+
+        if node not in visited:
+            for neighbor in graph.get(node, []):
+                # Tworzymy nową ścieżkę z dodanym sąsiadem i dodajemy ją do kolejki
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
+            visited.add(node)
+
+    return None
+
+# Przykładowe użycie
+graph = {
+    'A': ['B', 'C', 'F'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A', 'B', 'D', 'F', 'E'],
+    'D': ['B', 'C'],
+    'E': ['C'],
+    'F': ['A', 'C']
+}
+
+print(bfs_path(graph, 'A', 'E'))
