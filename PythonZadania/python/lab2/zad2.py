@@ -14,18 +14,58 @@ macierzach
 
 import numpy as np
 
-A = "np.array([[1, 2], [3, 4]])"
-B = "np.array([[5, 6], [7, 8]])"
+def validate_dimensions(matrix_a, matrix_b, operation):
+    if operation == "add":
+        return matrix_a.shape == matrix_b.shape
+    elif operation == "multiply":
+        return matrix_a.shape[1] == matrix_b.shape[0]
+    elif operation == "transpose":
+        return True  # Transpozycja zawsze jest możliwa
+    else:
+        raise ValueError("Nieznana operacja: {}".format(operation))
 
-expression_add = f"np.add({A}, {B})"
-expression_multiply = f"np.multiply({A}, {B})"
-expression_transpose = f"np.transpose({A})"
+def execute_matrix_operation(matrix_a, matrix_b, operation):
+    if operation == "add":
+        if validate_dimensions(matrix_a, matrix_b, operation):
+            return matrix_a + matrix_b
+        else:
+            raise ValueError("Niezgodne wymiary dla dodawania macierzy.")
 
-result = eval(expression_add)
-print(result)
+    elif operation == "multiply":
+        if validate_dimensions(matrix_a, matrix_b, operation):
+            return np.dot(matrix_a, matrix_b)
+        else:
+            raise ValueError("Niezgodne wymiary dla mnożenia macierzy.")
 
-result = eval(expression_multiply)
-print(result)
+    elif operation == "transpose":
+        return matrix_a.T
 
-result = eval(expression_transpose)
-print(result)
+    else:
+        raise ValueError("Nieznana operacja: {}".format(operation))
+
+# Przykład użycia
+if __name__ == "__main__":
+    matrix1 = np.array([[1, 2, 3], [4, 5, 6]])
+    matrix2 = np.array([[7, 8, 9], [10, 11, 12]])
+    matrix3 = np.array([[1, 2], [3, 4], [5, 6]])
+
+    print("Przykład 1: Dodawanie macierzy")
+    try:
+        result_add = execute_matrix_operation(matrix1, matrix2, "add")
+        print(result_add)
+    except ValueError as e:
+        print(e)
+
+    print("\nPrzykład 2: Mnożenie macierzy")
+    try:
+        result_multiply = execute_matrix_operation(matrix1, matrix3, "multiply")
+        print(result_multiply)
+    except ValueError as e:
+        print(e)
+
+    print("\nPrzykład 3: Transpozycja macierzy")
+    try:
+        result_transpose = execute_matrix_operation(matrix1, None, "transpose")
+        print(result_transpose)
+    except ValueError as e:
+        print(e)
